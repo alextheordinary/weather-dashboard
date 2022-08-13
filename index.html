@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Weather Dashboard</title>
-    <script src="https://kit.fontawesome.com/a71e3bdf2b.js" crossorigin="anonymous"></script>
+    <!-- <script src="https://kit.fontawesome.com/a71e3bdf2b.js" crossorigin="anonymous"></script> -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <link rel="stylesheet" href="./assets/css/style.css">
 </head>
@@ -25,7 +25,7 @@
         <div class="column is-one-quarter">
             <div class="box">
                 <p class="title has-text-grey-dark is-size-4">Search for a City:</p>
-                <input class="input m-1" type="text" placeholder="Hartford">
+                <input class="input m-1" type="text" placeholder="Hartford" id="search-box-city">
                 <button class="button is-info is-fullwidth m-1">Search</button>
             </div>
             <div class="box" id="search-history">
@@ -36,9 +36,9 @@
         <div class="column is-three-quarters">
             <div class="columns">
                 <!-- Today's forecast column -->
-                <div class="column is-full has-text-grey-dark is-size-4">
+                <div class="column is-full has-text-grey-dark is-size-6">
                     <div class="box">
-                    <p class="title has-text-grey-dark is-size-4">Example City <i class="fa-solid fa-cloud"></i></p>
+                    <p class="title has-text-grey-dark is-size-4" id="current-city">Example City <img id="current-city-icon"> </p>
                     <p>Temp:</p>
                     <p>Wind:</p>
                     <p>Humidity:</p>
@@ -54,7 +54,6 @@
                         <div class="card-content">
                             <div class="content is-size-6 has-text-info-dark">
                                 <p class="title is-size-5 has-text-info-dark">Day 1</p>
-                                <i class="fa-solid fa-sun m-2"></i>
                                 <p>Temp:</p>
                                 <p>Wind:</p>
                                 <p>Humidity:</p>
@@ -101,6 +100,19 @@
             </div>
         </div>
     </div>
+    <!-- Error modal -->
+    <div class="modal" id="error-modal">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+            <div class="card has-background-grey-light has-text-light">
+                <div class="card-content">
+                  <div class="content" id="error-text">
+                  </div>
+                </div>
+              </div>
+        </div>
+        <button class="modal-close is-large" aria-label="close"></button>
+      </div>
     <script src="./assets/js/script.js"></script>
 </body>
 
