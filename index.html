@@ -23,29 +23,81 @@
     <div class="columns m-1">
         <!-- Search bar column -->
         <div class="column is-one-quarter">
-            <p class="title has-text-grey-dark is-size-4">Search for a City:</p>
+            <div class="box">
+                <p class="title has-text-grey-dark is-size-4">Search for a City:</p>
+                <input class="input m-1" type="text" placeholder="Hartford">
+                <button class="button is-info is-fullwidth m-1">Search</button>
+            </div>
+            <div class="box" id="search-history">
+                <button class="button has-text-dark has-background-grey-light is-fullwidth m-2">Light</button>
+            </div>
         </div>
         <!-- Weather forecasts -->
         <div class="column is-three-quarters">
             <div class="columns">
                 <!-- Today's forecast column -->
-                <div class="column is-full">
-                    <p class="title has-text-grey-dark">Example City</p>
-                    <p class="title has-text-grey-dark is-size-5">More stuff</p>
+                <div class="column is-full has-text-grey-dark is-size-4">
+                    <div class="box">
+                    <p class="title has-text-grey-dark is-size-4">Example City <i class="fa-solid fa-cloud"></i></p>
+                    <p>Temp:</p>
+                    <p>Wind:</p>
+                    <p>Humidity:</p>
+                    <p>UV Index:</p>
                 </div>
-                <div class="column is-full">
-                    <p class="title has-text-grey-dark">5-Day Forecast:</p>
+                </div>
+            </div>
+            <!-- 5-day forecast title -->
+            <p class="title has-text-grey-dark is-size-5">5-Day Forecast:</p>
+            <div class="columns">
+                <div class="column is-one-fifth">
+                    <div class="card has-background-grey-lighter">
+                        <div class="card-content">
+                            <div class="content is-size-6 has-text-info-dark">
+                                <p class="title is-size-5 has-text-info-dark">Day 1</p>
+                                <i class="fa-solid fa-sun m-2"></i>
+                                <p>Temp:</p>
+                                <p>Wind:</p>
+                                <p>Humidity:</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="column is-one-fifth">
                     <div class="card">
                         <div class="card-content">
                             <div class="content">
-                                Day 1
+                                Day 2
                             </div>
                         </div>
                     </div>
                 </div>
-
+                <div class="column is-one-fifth">
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="content">
+                                Day 3
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="column is-one-fifth">
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="content">
+                                Day 4
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="column is-one-fifth">
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="content">
+                                Day 5
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
