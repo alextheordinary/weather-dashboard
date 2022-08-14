@@ -56,7 +56,7 @@ function callCurrentCity(cityName) {
 
 }
 
-// Makes a fetch call to the OpenWeather OneCall API using lon and lat fields as parameters. Excludes minutely, hourly, and alerts. Units are imperial. Parses the dt, weather.icon, temp.max, wind_speed, humidity, and uvi fields. Stores these values in arrays for each type.
+// Makes a fetch call to the OpenWeather OneCall API using lon and lat fields as parameters. Excludes minutely, hourly, and alerts. Units are imperial. Parses the dt, weather.icon, temp.max, wind_speed, humidity, uvi, and description fields. Stores these values in objects.
 
 function callOneCallDaily(lon, lat) {
     var oneCallQueryURL = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&exclude=minutely,hourly,alerts&units=imperial&appid=" + openWeatherAPIKey;
@@ -99,7 +99,7 @@ function callOneCallDaily(lon, lat) {
         });
 }
 
-// Fill Current Weather Box. 
+// Fill Current Weather Box. Uses objects created from callOneCallDaily()
 
 function fillCurrentWeather() {
     var currentCityEl = document.getElementById("current-city");
@@ -140,7 +140,7 @@ function fillFiveDay() {
     }
 }
 
-// Perform Search. Perform a search (aka call callCurrentCity) using either the value in the search input box or the text content of the search history buttons
+// Perform a search (aka call callCurrentCity) using either the value in the search input box or the text content of the search history buttons
 
 function performSearch(event) {
     if (event.target.id === "search-button") {
@@ -200,7 +200,7 @@ function init() {
 
 
 
-// Code for modals (from bulma css examples)
+// Code for modals (sourced directly from bulma css examples)
 
 document.addEventListener('DOMContentLoaded', () => {
     // Functions to open and close a modal
