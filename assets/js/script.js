@@ -1,11 +1,10 @@
 // Variables
 var openWeatherAPIKey = "cde33587929014e610ef72e096cfc4ad";
 var iconURLBase = "http://openweathermap.org/img/wn/";
-var currentCityEl = document.getElementById("current-city-icon");
 var currentCityName;
 var currentCityLon;
 var currentCityLat;
-currentCityEl.src = iconURLBase + "10d.png";
+
 
 // Variables for Current Weather
 var curWeatherObj;
@@ -79,6 +78,7 @@ function callOneCallDaily(lon, lat) {
                 humidity: data.current.humidity,
                 uvi: data.current.uvi
             };
+            console.log(moment(curWeatherObj.dt, "X").format("M/D/YYYY"));
 
             // Parse the response for the 5 day forecast
             for (i = 1; i < 6; i++) {
@@ -91,10 +91,54 @@ function callOneCallDaily(lon, lat) {
             // Write to local storage
             localStorage.setItem("cur-obj", JSON.stringify(curWeatherObj));
             localStorage.setItem("for-obj", JSON.stringify(forecastObj));
+
+            // Fill in current weather box
+            fillCurrentWeather();
+            fillFiveDay();
         })
         .catch((error) => {
             console.error(error);
         });
+}
+
+// Fill Current Weather Box. 
+
+function fillCurrentWeather() {
+    var currentCityEl = document.getElementById("current-city");
+    currentCityEl.textContent = currentCityName + " (" + moment(curWeatherObj.dt, "X").format("M/D/YYYY") + ")";
+    var currentCityIconEl = document.createElement('img');
+    currentCityIconEl.src = iconURLBase + curWeatherObj.icon + ".png";
+    currentCityEl.appendChild(currentCityIconEl);
+    document.getElementById("c-temp").textContent = "Temp: " + curWeatherObj.temp + " ℉" ;
+    document.getElementById("c-wind").textContent = "Wind: " + curWeatherObj.wind + " MPH" ;
+    document.getElementById("c-humidity").textContent = "Humidity: " + curWeatherObj.humidity + " %" ;
+    var uviEl = document.getElementById("c-uvi");
+    var uviSpanEl = document.createElement('span');
+    uviSpanEl.textContent = curWeatherObj.uvi;
+    uviEl.textContent = "UV Index: ";
+    uviEl.appendChild(uviSpanEl);
+
+    if (curWeatherObj.uvi < 3) {
+        uviSpanEl.classList.add("favorable");
+    } else if (curWeatherObj.uvi < 6) {
+        uviSpanEl.classList.add("moderate");
+    } else {
+        uviSpanEl.classList.add("severe");
+    }
+}
+
+// Fill 5-day forecast. Use a for loop to traverse to child elements in the dom and add in data from forecastObj
+
+function fillFiveDay() {
+
+    for (i = 1; i < 6; i++) {
+        var fDayEl = document.getElementById("day-" + i);
+        fDayEl.children[0].textContent = moment(forecastObj.dt[i-1], "X").format("M/D/YYYY");
+        fDayEl.children[1].src = iconURLBase + forecastObj.icon[i-1] + ".png";
+        fDayEl.children[2].textContent = "Temp: " + forecastObj.temp[i-1] + " ℉" ;
+        fDayEl.children[3].textContent = "Wind: " + forecastObj.wind[i-1] + " MPH" ;
+        fDayEl.children[4].textContent = "Humidity: " + forecastObj.wind[i-1] + " %" ;
+    }
 
 }
 
@@ -151,7 +195,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Main body
 callCurrentCity("hartford");
-//callOneCallDaily(-72.7662, 41.7668);
+
+
 
 
 

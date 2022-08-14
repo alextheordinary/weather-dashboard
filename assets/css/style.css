@@ -1,0 +1,20 @@
+.favorable {
+    background-color: green;
+    color: white;
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+.moderate {
+    background-color: orange;
+    color: white;
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+.severe {
+    background-color: red;
+    color: white;
+    padding-left: 2rem;
+    padding-right: 2rem;
+}

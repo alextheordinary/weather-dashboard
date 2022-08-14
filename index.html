@@ -20,7 +20,7 @@
         </div>
     </section>
     <!-- Columns to split the page into an area for the search bar and weather forecasts -->
-    <div class="columns m-1">
+    <div class="columns">
         <!-- Search bar column -->
         <div class="column is-one-quarter">
             <div class="box">
@@ -38,12 +38,12 @@
                 <!-- Today's forecast column -->
                 <div class="column is-full has-text-grey-dark is-size-6">
                     <div class="box">
-                    <p class="title has-text-grey-dark is-size-4" id="current-city">Example City <img id="current-city-icon"> </p>
-                    <p>Temp:</p>
-                    <p>Wind:</p>
-                    <p>Humidity:</p>
-                    <p>UV Index:</p>
-                </div>
+                        <p class="title has-text-grey-dark is-size-4" id="current-city"></p>
+                        <p id="c-temp"></p>
+                        <p id="c-wind"></p>
+                        <p id="c-humidity"></p>
+                        <p id="c-uvi"></p>
+                    </div>
                 </div>
             </div>
             <!-- 5-day forecast title -->
@@ -51,52 +51,60 @@
             <div class="columns">
                 <div class="column is-one-fifth">
                     <div class="card has-background-grey-lighter">
-                        <div class="card-content">
-                            <div class="content is-size-6 has-text-info-dark">
-                                <p class="title is-size-5 has-text-info-dark">Day 1</p>
-                                <p>Temp:</p>
-                                <p>Wind:</p>
-                                <p>Humidity:</p>
-                            </div>
+                        <div class="card-content is-size-6 has-text-info-dark" id="day-1">
+                            <p class="title is-size-5 has-text-info-dark"></p>
+                            <img>
+                            <p></p>
+                            <p></p>
+                            <p></p>
                         </div>
                     </div>
                 </div>
                 <div class="column is-one-fifth">
-                    <div class="card">
-                        <div class="card-content">
-                            <div class="content">
-                                Day 2
-                            </div>
+                    <div class="card has-background-grey-lighter">
+                        <div class="card-content is-size-6 has-text-info-dark" id="day-2">
+                            <p class="title is-size-5 has-text-info-dark"></p>
+                            <img>
+                            <p></p>
+                            <p></p>
+                            <p></p>
                         </div>
                     </div>
                 </div>
                 <div class="column is-one-fifth">
-                    <div class="card">
-                        <div class="card-content">
-                            <div class="content">
-                                Day 3
-                            </div>
+                    <div class="card has-background-grey-lighter">
+                        <div class="card-content is-size-6 has-text-info-dark" id="day-3">
+                            <p class="title is-size-5 has-text-info-dark"></p>
+                            <img>
+                            <p></p>
+                            <p></p>
+                            <p></p>
                         </div>
                     </div>
                 </div>
                 <div class="column is-one-fifth">
-                    <div class="card">
-                        <div class="card-content">
-                            <div class="content">
-                                Day 4
-                            </div>
+                    <div class="card has-background-grey-lighter">
+                        <div class="card-content is-size-6 has-text-info-dark" id="day-4">
+                            <p class="title is-size-5 has-text-info-dark"></p>
+                            <img>
+                            <p></p>
+                            <p></p>
+                            <p></p>
                         </div>
                     </div>
                 </div>
                 <div class="column is-one-fifth">
-                    <div class="card">
-                        <div class="card-content">
-                            <div class="content">
-                                Day 5
-                            </div>
+                    <div class="card has-background-grey-lighter">
+                        <div class="card-content is-size-6 has-text-info-dark" id="day-5">
+                            <p class="title is-size-5 has-text-info-dark"></p>
+                            <img>
+                            <p></p>
+                            <p></p>
+                            <p></p>
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
@@ -106,13 +114,14 @@
         <div class="modal-content">
             <div class="card has-background-grey-light has-text-light">
                 <div class="card-content">
-                  <div class="content" id="error-text">
-                  </div>
+                    <div class="content" id="error-text">
+                    </div>
                 </div>
-              </div>
+            </div>
         </div>
         <button class="modal-close is-large" aria-label="close"></button>
-      </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <script src="./assets/js/script.js"></script>
 </body>
 
