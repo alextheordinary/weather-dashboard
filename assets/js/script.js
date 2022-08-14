@@ -69,7 +69,7 @@ function callOneCallDaily(lon, lat) {
             throw new Error("Something went wrong!")
         })
         .then(function (data) {
-            // Parse the resonse for the current weather
+            // Parse the response for the current weather
             curWeatherObj = {
                 dt: data.current.dt,
                 icon: data.current.weather[0].icon,
@@ -99,7 +99,7 @@ function callOneCallDaily(lon, lat) {
         });
 }
 
-// Fill Current Weather Box. Uses objects created from callOneCallDaily()
+// Fill Current Weather Box. Uses objects created from callOneCallDaily(). Makes current weather box not hidden.
 
 function fillCurrentWeather() {
     var currentCityEl = document.getElementById("current-city");
@@ -124,9 +124,11 @@ function fillCurrentWeather() {
     } else {
         uviSpanEl.classList.add("severe");
     }
+    var currentWeatherBoxEl = document.getElementById("current-weather-box");
+    currentWeatherBoxEl.classList.remove("is-hidden");
 }
 
-// Fill 5-day forecast. Use a for loop to traverse to child elements in the dom and add in data from forecastObj
+// Fill 5-day forecast. Use a for loop to traverse to child elements in the dom and add in data from forecastObj. Makes 5-day-forecast box not hidden.
 
 function fillFiveDay() {
     for (i = 1; i < 6; i++) {
@@ -138,11 +140,14 @@ function fillFiveDay() {
         fDayEl.children[3].textContent = "Wind: " + Math.round(forecastObj.wind[i - 1]) + " MPH";
         fDayEl.children[4].textContent = "Humidity: " + Math.round(forecastObj.wind[i - 1]) + " %";
     }
+    var fiveDayBoxEl = document.getElementById("5-day-forecast-box");
+    fiveDayBoxEl.classList.remove("is-hidden");
 }
 
 // Perform a search (aka call callCurrentCity) using either the value in the search input box or the text content of the search history buttons
 
 function performSearch(event) {
+    event.preventDefault();
     if (event.target.id === "search-button") {
         var searchBoxEl = document.getElementById("search-box-city");
         var searchTerm = searchBoxEl.value;
@@ -182,6 +187,7 @@ function addHistoryButton(cityName) {
     historyButton.textContent = cityName;
     historyButton.addEventListener("click", performSearch);
     searchHistoryEl.appendChild(historyButton);
+    searchHistoryEl.classList.remove("is-hidden");
 }
 
 // Initilization. Pulling in the search history from local storage and adding the search history buttons
