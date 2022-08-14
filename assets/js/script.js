@@ -4,6 +4,9 @@ var iconURLBase = "http://openweathermap.org/img/wn/";
 var currentCityName;
 var currentCityLon;
 var currentCityLat;
+var searchHistory = [];
+var searchButtonEl = document.getElementById("search-button");
+var searchHistoryEl = document.getElementById("search-history");
 
 
 // Variables for Current Weather
@@ -13,7 +16,8 @@ var forecastObj = {
     icon: [],
     temp: [],
     wind: [],
-    humidity: []
+    humidity: [],
+    description: []
 };
 
 // Arrays for 5-day forecast 
@@ -23,7 +27,7 @@ var forecastObj = {
 
 // Functions 
 
-// Makes a fetch call to the OpenWeather Current weather data API using a city name as its parameter. Parses the coord.lon, coord.lat, and name fields from the response and stores them in localStorage for future use. Then callOneCallDaily is called. If the response fails, an error modal is popped up.
+// Makes a fetch call to the OpenWeather Current weather data API using a city name as its parameter. Parses the coord.lon, coord.lat, and name fields from the response. Then callOneCallDaily is called. If the response fails, an error modal is popped up.
 
 function callCurrentCity(cityName) {
     var currentWeatherQueryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&appid=" + openWeatherAPIKey;
@@ -36,13 +40,10 @@ function callCurrentCity(cityName) {
             throw new Error("Something went wrong!")
         })
         .then(function (data) {
-            console.log(data);
             currentCityName = data.name;
-            localStorage.setItem("city-name", JSON.stringify(currentCityName));
             currentCityLon = data.coord.lon;
-            localStorage.setItem("city-lon", JSON.stringify(currentCityLon));
             currentCityLat = data.coord.lat;
-            localStorage.setItem("city-lat", JSON.stringify(currentCityLat));
+            addToHistory(currentCityName);
             callOneCallDaily(currentCityLon, currentCityLat);
         })
         .catch((error) => {
@@ -55,7 +56,7 @@ function callCurrentCity(cityName) {
 
 }
 
-// Makes a fetch call to the OpenWeather OneCall API using lon and lat fields as parameters. Excludes minutely, hourly, and alerts. Units are imperial. Parses the dt, weather.icon, temp.max, wind_speed, humidity, and uvi fields. Stores these values in arrays for each type. Stores the arrays in localStorage for future use.
+// Makes a fetch call to the OpenWeather OneCall API using lon and lat fields as parameters. Excludes minutely, hourly, and alerts. Units are imperial. Parses the dt, weather.icon, temp.max, wind_speed, humidity, and uvi fields. Stores these values in arrays for each type.
 
 function callOneCallDaily(lon, lat) {
     var oneCallQueryURL = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&exclude=minutely,hourly,alerts&units=imperial&appid=" + openWeatherAPIKey;
@@ -68,7 +69,6 @@ function callOneCallDaily(lon, lat) {
             throw new Error("Something went wrong!")
         })
         .then(function (data) {
-            console.log(data);
             // Parse the resonse for the current weather
             curWeatherObj = {
                 dt: data.current.dt,
@@ -76,21 +76,19 @@ function callOneCallDaily(lon, lat) {
                 temp: data.current.temp,
                 wind: data.current.wind_speed,
                 humidity: data.current.humidity,
-                uvi: data.current.uvi
+                uvi: data.current.uvi,
+                description: data.current.weather[0].description
             };
-            console.log(moment(curWeatherObj.dt, "X").format("M/D/YYYY"));
 
             // Parse the response for the 5 day forecast
             for (i = 1; i < 6; i++) {
-                forecastObj.dt[i-1] = data.daily[i].dt;
-                forecastObj.icon[i-1] = data.daily[i].weather[0].icon;
-                forecastObj.temp[i-1] = data.daily[i].temp.max;
-                forecastObj.wind[i-1] = data.daily[i].wind_speed;
-                forecastObj.humidity[i-1] = data.daily[i].humidity;
+                forecastObj.dt[i - 1] = data.daily[i].dt;
+                forecastObj.icon[i - 1] = data.daily[i].weather[0].icon;
+                forecastObj.temp[i - 1] = data.daily[i].temp.max;
+                forecastObj.wind[i - 1] = data.daily[i].wind_speed;
+                forecastObj.humidity[i - 1] = data.daily[i].humidity;
+                forecastObj.description[i - 1] = data.daily[i].weather[0].description;
             }
-            // Write to local storage
-            localStorage.setItem("cur-obj", JSON.stringify(curWeatherObj));
-            localStorage.setItem("for-obj", JSON.stringify(forecastObj));
 
             // Fill in current weather box
             fillCurrentWeather();
@@ -108,10 +106,11 @@ function fillCurrentWeather() {
     currentCityEl.textContent = currentCityName + " (" + moment(curWeatherObj.dt, "X").format("M/D/YYYY") + ")";
     var currentCityIconEl = document.createElement('img');
     currentCityIconEl.src = iconURLBase + curWeatherObj.icon + ".png";
+    currentCityIconEl.alt = curWeatherObj.description;
     currentCityEl.appendChild(currentCityIconEl);
-    document.getElementById("c-temp").textContent = "Temp: " + curWeatherObj.temp + " ℉" ;
-    document.getElementById("c-wind").textContent = "Wind: " + curWeatherObj.wind + " MPH" ;
-    document.getElementById("c-humidity").textContent = "Humidity: " + curWeatherObj.humidity + " %" ;
+    document.getElementById("c-temp").textContent = "Temp: " + Math.round(curWeatherObj.temp) + " ℉";
+    document.getElementById("c-wind").textContent = "Wind: " + Math.round(curWeatherObj.wind) + " MPH";
+    document.getElementById("c-humidity").textContent = "Humidity: " + Math.round(curWeatherObj.humidity) + " %";
     var uviEl = document.getElementById("c-uvi");
     var uviSpanEl = document.createElement('span');
     uviSpanEl.textContent = curWeatherObj.uvi;
@@ -130,17 +129,75 @@ function fillCurrentWeather() {
 // Fill 5-day forecast. Use a for loop to traverse to child elements in the dom and add in data from forecastObj
 
 function fillFiveDay() {
-
     for (i = 1; i < 6; i++) {
         var fDayEl = document.getElementById("day-" + i);
-        fDayEl.children[0].textContent = moment(forecastObj.dt[i-1], "X").format("M/D/YYYY");
-        fDayEl.children[1].src = iconURLBase + forecastObj.icon[i-1] + ".png";
-        fDayEl.children[2].textContent = "Temp: " + forecastObj.temp[i-1] + " ℉" ;
-        fDayEl.children[3].textContent = "Wind: " + forecastObj.wind[i-1] + " MPH" ;
-        fDayEl.children[4].textContent = "Humidity: " + forecastObj.wind[i-1] + " %" ;
+        fDayEl.children[0].textContent = moment(forecastObj.dt[i - 1], "X").format("M/D/YYYY");
+        fDayEl.children[1].src = iconURLBase + forecastObj.icon[i - 1] + ".png";
+        fDayEl.children[1].alt = forecastObj.description[i - 1];
+        fDayEl.children[2].textContent = "Temp: " + Math.round(forecastObj.temp[i - 1]) + " ℉";
+        fDayEl.children[3].textContent = "Wind: " + Math.round(forecastObj.wind[i - 1]) + " MPH";
+        fDayEl.children[4].textContent = "Humidity: " + Math.round(forecastObj.wind[i - 1]) + " %";
     }
-
 }
+
+// Perform Search. Perform a search (aka call callCurrentCity) using either the value in the search input box or the text content of the search history buttons
+
+function performSearch(event) {
+    if (event.target.id === "search-button") {
+        var searchBoxEl = document.getElementById("search-box-city");
+        var searchTerm = searchBoxEl.value;
+        searchBoxEl.value = "";
+
+    } else {
+        var searchTerm = event.target.textContent;
+    }
+    callCurrentCity(searchTerm);
+}
+
+// Add a search city to the history. This will only be called if an ok response was received. Only new cities will be added.
+
+
+function addToHistory(cityName) {
+    function findCityName(itemToFind) {
+        return itemToFind === cityName;
+    }
+    if (searchHistory.find(findCityName)) {
+        return;
+    } else {
+        addHistoryButton(cityName);
+        searchHistory.push(cityName);
+        localStorage.setItem("search-history", JSON.stringify(searchHistory));
+    }
+}
+
+// Add a history button. Used by addToHistory and during intilization
+
+function addHistoryButton(cityName) {
+    var historyButton = document.createElement("button");
+    historyButton.classList.add("button");
+    historyButton.classList.add("has-text-dark");
+    historyButton.classList.add("has-background-grey-light");
+    historyButton.classList.add("is-fullwidth");
+    historyButton.classList.add("m-2");
+    historyButton.textContent = cityName;
+    historyButton.addEventListener("click", performSearch);
+    searchHistoryEl.appendChild(historyButton);
+}
+
+// Initilization. Pulling in the search history from local storage and adding the search history buttons
+
+function init() {
+    var storedHistory = JSON.parse(localStorage.getItem("search-history"));
+    if (storedHistory !== null) {
+        searchHistory = storedHistory;
+        for (i = 0; i < searchHistory.length; i++) {
+            addHistoryButton(searchHistory[i]);
+        }
+    }
+    searchButtonEl.addEventListener("click", performSearch);
+}
+
+
 
 
 // Code for modals (from bulma css examples)
@@ -194,7 +251,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 // Main body
-callCurrentCity("hartford");
+init();
+
 
 
 
